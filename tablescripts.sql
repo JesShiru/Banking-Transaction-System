@@ -23,12 +23,6 @@ CREATE TABLE IF NOT EXISTS Account (
     FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID) 
 );
 
--- Security & Authentication Table
-CREATE TABLE IF NOT EXISTS SecurityAndAuthentication (
-    Password VARCHAR(50) PRIMARY KEY,      
-    AccountNumber INT,                     
-    FOREIGN KEY (AccountNumber) REFERENCES Account(AccountNumber)
-);
 
 -- Transaction Table
 CREATE TABLE IF NOT EXISTS Transaction (
@@ -98,13 +92,6 @@ VALUES
     (1001, 1, 'Checking', 5000.00, '2023-01-01', 'Active'),
     (1002, 2, 'Savings', 10000.00, '2023-02-01', 'Active'),
     (1003, 3, 'Checking', 2500.00, '2023-03-01', 'Inactive');
-
--- Inserting data into SecurityAndAuthentication table
-INSERT INTO SecurityAndAuthentication (Password, AccountNumber)
-VALUES
-    ('password123', 1001),
-    ('securepass456', 1002),
-    ('mypassword789', 1003);
 
 -- Inserting data into Transaction table
 INSERT INTO Transaction (TransactionID, AccountNumber, TransactionType, TransactionAmount, TransactionFee, DestinationAccount, Timestamp)
