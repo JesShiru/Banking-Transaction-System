@@ -1,6 +1,6 @@
 # Banking Transaction System
 
-Welcome to the **Banking Transaction System**! This repository contains scripts and modules to manage and process banking transactions efficiently and securely.
+Welcome to the **Banking Transaction System**! This repository contains scripts and modules to manage and process banking transactions efficiently and reliably.
 
 ## Table of Contents
 
@@ -8,10 +8,7 @@ Welcome to the **Banking Transaction System**! This repository contains scripts 
 2. [Features](#features)
 3. [Prerequisites](#prerequisites)
 4. [Installation](#installation)
-5. [Usage](#usage)
-6. [Running the Scripts](#running-the-scripts)
-7. [Contributing](#contributing)
-8. [License](#license)
+5. [Contributing](#contributing)
 
 ---
 
