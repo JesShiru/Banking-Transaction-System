@@ -43,10 +43,10 @@ AFTER UPDATE ON loan
 FOR EACH ROW
 BEGIN
     -- Check if the balance has been cleared
-    IF NEW.Balance = 0 THEN
+    IF NEW.OutstandingBalance = 0 THEN
         -- Update the loan status to 'Inactive'
         UPDATE loan
-        SET Status = 'Inactive'
+        SET LoanStatus = 'Inactive'
         WHERE LoanID = NEW.LoanID;
     END IF;
 END$$
