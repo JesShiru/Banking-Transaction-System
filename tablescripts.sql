@@ -60,3 +60,21 @@ CREATE TABLE IF NOT EXISTS Card (
     FOREIGN KEY (AccountNumber) REFERENCES Account(AccountNumber)
 );
 
+-- Branch Table
+CREATE TABLE IF NOT EXISTS Branch (
+    BranchID INT PRIMARY KEY,             
+    Location VARCHAR(100),
+    ContactInformation VARCHAR(100),
+    ManagerID INT                         
+);
+-- Employees Table
+CREATE TABLE IF NOT EXISTS Employees (
+    EmployeeID INT PRIMARY KEY,            
+    BranchID INT,                          
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Role VARCHAR(50),
+    PhoneNumber VARCHAR(15),
+    Email VARCHAR(100),
+    FOREIGN KEY (BranchID) REFERENCES Branch(BranchID) 
+);
