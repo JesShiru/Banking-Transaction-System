@@ -72,3 +72,50 @@ DELIMITER ;
 UPDATE Account
 SET balance = 60000.00 
 WHERE AccountNumber = 1369;
+
+--loanpayment
+DELIMITER $$
+
+CREATE TRIGGER after_loan_payment
+AFTER UPDATE ON Loan
+FOR EACH ROW
+BEGIN
+    -- Log the loan payment in the Transaction table
+    IF NEW.OutstandingBalance = 0 THEN
+        INSERT INTO Transaction (
+            AccountNumber,
+            TransactionType,
+            TransactionAmount,
+            TransactionFee,
+            DestinationAccount,
+            Timestamp
+        )
+        VALUES (
+            (SELECT AccountNumber FROM Account WHERE CustomerID = NEW.CustomerID), -- Fetch AccountNumber from Customer
+            'Loan Payment',
+            OLD.OutstandingBalance, -- Payment amount is the old balance
+            0.00,
+            NULL,
+            NOW()
+        );
+    END IF;
+END$$
+
+DELIMITER ;
+
+-- loanstatus
+UPDATE Loan
+SET LoanStatus = 'Inactive'
+WHERE OutstandingBalance = 0.00 AND LoanStatus != 'Inactive';
+-- test
+UPDATE Loan
+SET OutstandingBalance = 0.00
+WHERE LoanID = 1;
+--event to change it to inactive
+CREATE EVENT IF NOT EXISTS update_loan_status
+ON SCHEDULE EVERY 1 MINUTE
+DO
+    UPDATE Loan
+    SET LoanStatus = 'Inactive'
+    WHERE OutstandingBalance = 0.00 AND LoanStatus != 'Inactive';
+
