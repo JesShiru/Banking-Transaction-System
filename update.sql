@@ -36,7 +36,7 @@ WHERE AccountType = 'Savings' AND AccountStatus = 'Active';
 
 --test for updating loan balance(just writing not working for now)
 UPDATE loan SET LoanStatus = 'inactive' WHERE OutstandingBalance = 0 AND LoanStatus != 'inactive';
-DELIMITER $$
+DELIMITER $$ --this one works for now
 
 CREATE TRIGGER after_loan_balance_update
 AFTER UPDATE ON loan
