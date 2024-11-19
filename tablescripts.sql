@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS Loan (
 
 -- Card Table
 CREATE TABLE IF NOT EXISTS Card (
-    CardNumber VARCHHAR(16) PRIMARY KEY,            
+    CardNumber INT PRIMARY KEY,            
     Type VARCHAR(20),                      
     IssueDate DATE,
     ExpirationDate DATE,
