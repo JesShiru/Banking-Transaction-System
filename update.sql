@@ -34,22 +34,17 @@ WHERE AccountType = 'Savings' AND AccountStatus = 'Active';
 
 
 
---test for updating loan balance(just writing not working for now)
-UPDATE loan SET LoanStatus = 'inactive' WHERE OutstandingBalance = 0 AND LoanStatus != 'inactive';
-DELIMITER $$ --this one works for now
+--test for triggering an insert to transaction after a deposit(works but confirm)
+DELIMITER $$
 
-CREATE TRIGGER after_loan_balance_update
-AFTER UPDATE ON loan
+CREATE TRIGGER after_deposit
+AFTER UPDATE ON Account
 FOR EACH ROW
 BEGIN
-    -- Check if the balance has been cleared
-    IF NEW.OutstandingBalance = 0 THEN
-        -- Update the loan status to 'Inactive'
-        UPDATE loan
-        SET LoanStatus = 'Inactive'
-        WHERE LoanID = NEW.LoanID;
+    IF NEW.Balance > OLD.Balance THEN
+        INSERT INTO Transaction (AccountNumber, TransactionType, TransactionAmount, TransactionFee, DestinationAccount, Timestamp)
+        VALUES (NEW.AccountNumber, 'Deposit', NEW.Balance - OLD.Balance, 0.00, NULL, NOW());
     END IF;
-END;
+END$$
 
 DELIMITER ;
-
