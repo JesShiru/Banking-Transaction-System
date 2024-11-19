@@ -49,7 +49,7 @@ BEGIN
         SET LoanStatus = 'Inactive'
         WHERE LoanID = NEW.LoanID;
     END IF;
-END$$
+END;
 
 DELIMITER ;
 
