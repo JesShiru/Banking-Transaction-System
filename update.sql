@@ -48,3 +48,27 @@ BEGIN
 END$$
 
 DELIMITER ;
+-- testing the trigger
+UPDATE Account
+SET balance = 30000.00 
+WHERE AccountNumber = 1255;
+
+-- withdrawal trigger
+DELIMITER $$
+
+CREATE TRIGGER after_withdrawal
+AFTER UPDATE ON Account
+FOR EACH ROW
+BEGIN
+    IF NEW.Balance < OLD.Balance THEN
+        INSERT INTO Transaction (AccountNumber, TransactionType, TransactionAmount, TransactionFee, DestinationAccount, Timestamp)
+        VALUES (NEW.AccountNumber, 'Withdrawal', OLD.Balance - NEW.Balance, 0.00, NULL, NOW());
+    END IF;
+END$$
+
+DELIMITER ;
+
+-- testing it
+UPDATE Account
+SET balance = 60000.00 
+WHERE AccountNumber = 1369;
