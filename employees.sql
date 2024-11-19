@@ -13,7 +13,7 @@ INSERT INTO employees (`EmployeeID`,`BranchID`,`FirstName`,`LastName`,`Role`,`Ph
 INSERT INTO employees (`EmployeeID`,`BranchID`,`FirstName`,`LastName`,`Role`,`PhoneNumber`,`Email`) VALUES (7,12,'Emily','Garcia','HR','+254706777888','emilygarcia@example.com');
 INSERT INTO employees (`EmployeeID`,`BranchID`,`FirstName`,`LastName`,`Role`,`PhoneNumber`,`Email`) VALUES (8,8,'James','Harris','Teller','+254707888999','jamesharris@example.com');
 INSERT INTO employees (`EmployeeID`,`BranchID`,`FirstName`,`LastName`,`Role`,`PhoneNumber`,`Email`) VALUES (9,9,'Patricia','Clark','Manager','+254708999000','patriciaclark@example.com');
-INSERT INTO emloyees(`EmployeeID`,`BranchID`,`FirstName`,`LastName`,`Role`,`PhoneNumber`,`Email`) VALUES (10,2,'Michael','Lewis','Security','+254709000111','michaellewis@example.com');
+INSERT INTO employees(`EmployeeID`,`BranchID`,`FirstName`,`LastName`,`Role`,`PhoneNumber`,`Email`) VALUES (10,2,'Michael','Lewis','Security','+254709000111','michaellewis@example.com');
 INSERT INTO employees(`EmployeeID`,`BranchID`,`FirstName`,`LastName`,`Role`,`PhoneNumber`,`Email`) VALUES (11,4,'Linda','Walker','Cashier','+254710111222','lindawalker@example.com');
 INSERT INTO employees(`EmployeeID`,`BranchID`,`FirstName`,`LastName`,`Role`,`PhoneNumber`,`Email`) VALUES (12,12,'David','Hall','Accountant','+254711222333','davidhall@example.com');
 INSERT INTO employees(`EmployeeID`,`BranchID`,`FirstName`,`LastName`,`Role`,`PhoneNumber`,`Email`) VALUES (13,8,'Barbara','Allen','Loan Officer','+254712333444','barbaraallen@example.com');
