@@ -29,3 +29,27 @@ WHERE AccountType = 'Fixed Deposit';
 UPDATE Account
 SET Balance = Balance + (Balance * 0.01)
 WHERE AccountType = 'Savings' AND AccountStatus = 'Active';
+
+
+
+
+
+--test for updating loan balance(just writing not working for now)
+UPDATE loan SET LoanStatus = 'inactive' WHERE OutstandingBalance = 0 AND LoanStatus != 'inactive';
+DELIMITER $$
+
+CREATE TRIGGER after_loan_balance_update
+AFTER UPDATE ON loan
+FOR EACH ROW
+BEGIN
+    -- Check if the balance has been cleared
+    IF NEW.Balance = 0 THEN
+        -- Update the loan status to 'Inactive'
+        UPDATE loan
+        SET Status = 'Inactive'
+        WHERE LoanID = NEW.LoanID;
+    END IF;
+END$$
+
+DELIMITER ;
+
