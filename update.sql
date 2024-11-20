@@ -35,7 +35,6 @@ FOR EACH ROW
 BEGIN
     DECLARE current_balance DECIMAL(15, 2);
 
-    -- Only check balance for withdraw transactions
     IF NEW.TransactionType = 'Withdraw' THEN
         -- Get the current balance of the account
         SELECT Balance
@@ -43,7 +42,6 @@ BEGIN
         FROM Accounts
         WHERE AccountNumber = NEW.AccountNumber;
 
-        -- Check if the transaction would result in a negative balance
         IF (current_balance - NEW.TransactionAmount - NEW.TransactionFee) < 0 THEN
             SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Insufficient funds to complete the transaction.';
@@ -54,7 +52,7 @@ END //
 DELIMITER ;
 
 -- test trigger: PreventNegativeBalance
-INSERT INTO transactions (`AccountNumber`,`TransactionType`,`TransactionAmount`,`TransactionFee`) VALUES (1379,'Deposit',59000.00,20.00);
+INSERT INTO transactions (`AccountNumber`,`TransactionType`,`TransactionAmount`,`TransactionFee`) VALUES (1379,'Withdraw',59000.00,20.00);
 
 -- Trigger update the account balance incase of a withdrawal or deposit
 DELIMITER $$
@@ -70,12 +68,11 @@ BEGIN
     FROM Accounts
     WHERE AccountNumber = NEW.AccountNumber;
 
-    -- Update the balance based on the transaction type
-    IF NEW.TransactionType = 'withdraw' THEN
+    IF NEW.TransactionType = 'Withdraw' THEN
         UPDATE Accounts
         SET Balance = current_balance - NEW.TransactionAmount - NEW.TransactionFee
         WHERE AccountNumber = NEW.AccountNumber;
-    ELSEIF NEW.TransactionType = 'deposit' THEN
+    ELSEIF NEW.TransactionType = 'Deposit' THEN
         UPDATE Accounts
         SET Balance = current_balance + NEW.TransactionAmount
         WHERE AccountNumber = NEW.AccountNumber;
