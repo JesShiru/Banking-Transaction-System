@@ -113,3 +113,36 @@ DO
     SET LoanStatus = 'Inactive'
     WHERE OutstandingBalance = 0.00 AND LoanStatus != 'Inactive';
 
+-- Event : On Insert or update, phone number length is checked
+-- If digits less than 10; Replaced with 'Unknown'
+
+DELIMITER $$
+
+CREATE TRIGGER update_phone_number
+BEFORE INSERT OR UPDATE ON Customer
+FOR EACH ROW
+BEGIN
+    IF NEW.PhoneNumber IS NULL OR LENGTH(NEW.PhoneNumber) < 10 THEN
+        SET NEW.PhoneNumber = 'Unknown';
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+-- Event : On Insert or update, next of kin is checked
+-- If NULL; Replaced with 'Not Provided'
+
+DELIMITER $$
+
+CREATE TRIGGER add_next_of_kin
+BEFORE INSERT OR UPDATE ON Customer
+FOR EACH ROW
+BEGIN
+    IF NEW.NextOfKin IS NULL THEN
+        SET NEW.NextOfKin = 'Not Provided';
+    END IF;
+END$$
+
+DELIMITER ;
+
