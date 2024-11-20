@@ -30,22 +30,6 @@ WHERE AccountType = 'Savings' AND AccountStatus = 'Active';
 
 
 --test for triggering an insert to transaction after a deposit
-DELIMITER $$
-CREATE TRIGGER after_deposit
-AFTER UPDATE ON Accounts
-FOR EACH ROW
-BEGIN
-    IF NEW.Balance > OLD.Balance THEN
-        INSERT INTO Transactions (AccountNumber, TransactionType, TransactionAmount, TransactionFee)
-        VALUES (NEW.AccountNumber, 'Deposit', NEW.Balance - OLD.Balance, 0.00);
-    END IF;
-END$$
-DELIMITER ;
-
--- testing the trigger
-UPDATE Accounts
-SET balance = 30000.00 
-WHERE AccountNumber = 1255;
 
 -- withdrawal trigger
 DELIMITER $$
