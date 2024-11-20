@@ -1,5 +1,7 @@
-# Creating the relevant tables
+DROP DATABASE IF EXISTS banking_system;
+CREATE DATABASE IF NOT EXISTS banking_system;
 
+# Creating the relevant tables
 -- Customer Table
 CREATE TABLE IF NOT EXISTS Customer (
     CustomerID INT PRIMARY KEY,            
