@@ -27,28 +27,65 @@ UPDATE Accounts
 SET Balance = Balance + (Balance * 0.01)
 WHERE AccountType = 'Savings' AND AccountStatus = 'Active';
 
-
-
---test for triggering an insert to transaction after a deposit
-
--- withdrawal trigger
-DELIMITER $$
-CREATE TRIGGER after_withdrawal
-AFTER UPDATE ON Accounts
+-- trigger to prevent negative balance
+DELIMITER //
+CREATE TRIGGER PreventNegativeBalance
+BEFORE INSERT ON Transactions
 FOR EACH ROW
 BEGIN
-    IF NEW.Balance < OLD.Balance THEN
-        INSERT INTO Transaction (AccountNumber, TransactionType, TransactionAmount, TransactionFee)
-        VALUES (NEW.AccountNumber, 'Withdrawal', OLD.Balance - NEW.Balance);
+    DECLARE current_balance DECIMAL(15, 2);
+
+    -- Only check balance for withdraw transactions
+    IF NEW.TransactionType = 'Withdraw' THEN
+        -- Get the current balance of the account
+        SELECT Balance
+        INTO current_balance
+        FROM Accounts
+        WHERE AccountNumber = NEW.AccountNumber;
+
+        -- Check if the transaction would result in a negative balance
+        IF (current_balance - NEW.TransactionAmount - NEW.TransactionFee) < 0 THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Insufficient funds to complete the transaction.';
+        END IF;
     END IF;
-END$$
+END //
 
 DELIMITER ;
 
--- testing it
-UPDATE Accounts
-SET balance = 60000.00 
-WHERE AccountNumber = 1369;
+-- test trigger: PreventNegativeBalance
+INSERT INTO transactions (`AccountNumber`,`TransactionType`,`TransactionAmount`,`TransactionFee`) VALUES (1379,'Deposit',59000.00,20.00);
+
+-- Trigger update the account balance incase of a withdrawal or deposit
+DELIMITER $$
+CREATE TRIGGER UpdateAccountBalance
+AFTER INSERT ON Transactions
+FOR EACH ROW
+BEGIN
+    DECLARE current_balance DECIMAL(15, 2);
+
+    -- Get the current balance of the account
+    SELECT Balance
+    INTO current_balance
+    FROM Accounts
+    WHERE AccountNumber = NEW.AccountNumber;
+
+    -- Update the balance based on the transaction type
+    IF NEW.TransactionType = 'withdraw' THEN
+        UPDATE Accounts
+        SET Balance = current_balance - NEW.TransactionAmount - NEW.TransactionFee
+        WHERE AccountNumber = NEW.AccountNumber;
+    ELSEIF NEW.TransactionType = 'deposit' THEN
+        UPDATE Accounts
+        SET Balance = current_balance + NEW.TransactionAmount
+        WHERE AccountNumber = NEW.AccountNumber;
+    END IF;
+END $$
+DELIMITER ;
+
+-- testing trigger:UpdateAccountBalance
+INSERT INTO transactions (`AccountNumber`,`TransactionType`,`TransactionAmount`,`TransactionFee`) VALUES (1379,'Deposit',59000.00,20.00);
+
 
 --loanpayment
 DELIMITER $$
