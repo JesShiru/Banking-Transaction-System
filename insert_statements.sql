@@ -15,7 +15,7 @@ VALUES
 (10,'Clywd','Muat','578-195-4241','cmuat9@yellowpages.com','490-43-4206','2023-02-09','Ryan Mitchell');
 
 -- inserting into accounts table
-INSERT INTO account (`AccountNumber`, `CustomerID`, `AccountType`, `Balance`, `CreationDate`, `AccountStatus`) 
+INSERT INTO accounts (`AccountNumber`, `CustomerID`, `AccountType`, `Balance`, `CreationDate`, `AccountStatus`) 
 VALUES 
 (1255, 1, 'Savings', 28928.86, '2023-02-04', 'Inactive'),
 (1369, 2, 'Fixed Deposit', 71405.54, '2024-09-01', 'Active'),
@@ -29,7 +29,7 @@ VALUES
 (2308, 10, 'Fixed Deposit', 13460.04, '2023-07-30', 'Active');
 
 -- INSERT INTO CARDS TABLE
-INSERT INTO card (`CardNumber`, `Type`, `IssueDate`, `ExpirationDate`, `AccountNumber`) 
+INSERT INTO card (`CardNumber`, `CardType`, `IssueDate`, `ExpirationDate`, `AccountNumber`) 
 VALUES 
 ('1012345610123457', 'Credit', '2023-12-16', '2027-12-31', 1369), 
 ('1012345610123459', 'Credit', '2023-03-09', '2026-03-31', 1705), 
