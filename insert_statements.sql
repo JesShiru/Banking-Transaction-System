@@ -1,4 +1,3 @@
-USE banking_system;
 
 -- insert into customer table
 INSERT INTO customer (`CustomerID`, `FirstName`, `LastName`, `PhoneNumber`, `Email`, `NationalID`, `AccountCreationDate`, `NextOfKin`) 
