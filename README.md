@@ -53,63 +53,62 @@ Ensure the following tools and dependencies are installed:
    cd Banking-Transaction-System
    ```
 ### 3. Set Up the Database
-- Open MySQL Workbench and connect to your MySQL server using the root credentials.
-- Run the SQL script located in the database/ folder to set up the required database and tables:
+- **Open MySQL Workbench** and connect to your MySQL server using the root credentials.
+- **Run the SQL script** located in the database/ folder to set up the required database and tables:
     SOURCE path/to/database_script.sql;
-- Update the config.py or config.json file (if available) with the following details:
-    Database name
-    Host (e.g., localhost)
-    Port (default: 3306)
-    Username and password for the database connection
+- **Update the config.py or config.json file** (if available) with the following details:
+  Database name
+  Host (e.g., localhost)
+  Port (default: 3306)
+  Username and password for the database connection
+  
 ### Accessing MySQL Workbench
-Use MySQL Workbench to view, query, and manage the database. Connect using the credentials provided during installation.
+Use MySQL Workbench to view, query, and manage the database. 
+Connect using the credentials provided during installation.
 
 ## Step-by-Step Procedure to Run Scripts
 Follow these steps to execute the scripts in the correct order:
 
 ### Step 1: Open tablescripts.sql
-Open MySQL Workbench and connect to your MySQL Server.
-In the Navigator, ensure you are connected to the correct MySQL instance.
-Open the file tablescripts.sql located in the repository's sql/ folder.
-Use the menu: File > Open SQL Script.
-Execute the script to create the database and tables:
-Copy code
-SOURCE path/to/tablescripts.sql;
-Verify the database and tables are created:
-sql
-Copy code
-SHOW DATABASES;
-USE your_database_name;
-SHOW TABLES;
+- Open MySQL Workbench and connect to your MySQL Server.
+- In the Navigator, ensure you are connected to the correct MySQL instance.
+- Open the file tablescripts.sql located in the repository's sql/ folder.
+- Use the menu: File > Open SQL Script.
+- Execute the script to create the database and tables:
+   Copy code
+   SOURCE path/to/tablescripts.sql;
+- Verify the database and tables are created:
+   Copy code
+   SHOW DATABASES;
+   USE your_database_name;
+   SHOW TABLES;
 
 ### Step 2: Run insertstatements.sql
-Open the insertstatements.sql script in MySQL Workbench.
-Execute the script to insert sample data into the database:
-Copy code
-SOURCE path/to/insertstatements.sql;
-Verify the data was inserted successfully:
-Copy code
-SELECT * FROM customers;
-SELECT * FROM accounts;
+- Open the insertstatements.sql script in MySQL Workbench.
+- Execute the script to insert sample data into the database:
+   Copy code
+   SOURCE path/to/insertstatements.sql;
+- Verify the data was inserted successfully:
+   Copy code
+   SELECT * FROM customers;
+   SELECT * FROM accounts;
 
 ### Step 3: Run storedprocedures.sql
-Open the storedprocedures.sql file in MySQL Workbench.
-Execute the script to create stored procedures:
-sql
-Copy code
-SOURCE path/to/storedprocedures.sql;
-Verify the stored procedures are created:
-sql
-Copy code
-SHOW PROCEDURE STATUS WHERE Db = 'your_database_name';
+- Open the storedprocedures.sql file in MySQL Workbench.
+- Execute the script to create stored procedures:
+   Copy code
+   SOURCE path/to/storedprocedures.sql;
+- Verify the stored procedures are created:
+   Copy code
+   SHOW PROCEDURE STATUS WHERE Db = 'your_database_name';
 
 ### Step 4: Test Stored Procedures
 
 ### Step 5: Run Additional Scripts (Optional)
 If there are other scripts (e.g., for views, triggers, or reports), follow the same process:
 
-Open the script in MySQL Workbench.
-Execute it using the Run Script button or the SOURCE command.
+- Open the script in MySQL Workbench.
+- Execute it using the Run Script button or the SOURCE command.
 
 ## Contributing
 We welcome contributions! Please follow these steps:
