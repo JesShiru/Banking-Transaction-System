@@ -73,7 +73,7 @@ CREATE PROCEDURE UpdateAccountBalance(
     IN p_NewBalance DECIMAL(15, 2)
 )
 BEGIN
-    UPDATE Account
+    UPDATE Accounts
     SET Balance = p_NewBalance
     WHERE AccountNumber = p_AccountNumber;
 END$$
@@ -85,18 +85,16 @@ DELIMITER ;
 -- add transaction
 DELIMITER $$
 
-CREATE PROCEDURE AddTransaction(
+CREATE PROCEDURE AddTransactions(
     IN p_TransactionID INT,
     IN p_AccountNumber INT,
     IN p_TransactionType VARCHAR(50),
     IN p_TransactionAmount DECIMAL(15, 2),
-    IN p_TransactionFee DECIMAL(10, 2),
-    IN p_DestinationAccount INT,
-    IN p_Timestamp TIMESTAMP
+    IN p_TransactionFee DECIMAL(10, 2)
 )
 BEGIN
-    INSERT INTO Transaction (TransactionID, AccountNumber, TransactionType, TransactionAmount, TransactionFee, DestinationAccount, Timestamp)
-    VALUES (p_TransactionID, p_AccountNumber, p_TransactionType, p_TransactionAmount, p_TransactionFee, p_DestinationAccount, p_Timestamp);
+    INSERT INTO Transactions (TransactionID, AccountNumber, TransactionType, TransactionAmount, TransactionFee)
+    VALUES (p_TransactionID, p_AccountNumber, p_TransactionType, p_TransactionAmount, p_TransactionFee);
 END$$
 
 DELIMITER ;
@@ -148,14 +146,14 @@ DELIMITER $$
 
 CREATE PROCEDURE AddCard(
     IN p_CardNumber VARCHAR(16),
-    IN p_Type VARCHAR(20),
+    IN p_CardType VARCHAR(20),
     IN p_IssueDate DATE,
     IN p_ExpirationDate DATE,
     IN p_AccountNumber INT
 )
 BEGIN
     INSERT INTO Card (CardNumber, Type, IssueDate, ExpirationDate, AccountNumber)
-    VALUES (p_CardNumber, p_Type, p_IssueDate, p_ExpirationDate, p_AccountNumber);
+    VALUES (p_CardNumber, p_CardType, p_IssueDate, p_ExpirationDate, p_AccountNumber);
 END$$
 
 DELIMITER ;
