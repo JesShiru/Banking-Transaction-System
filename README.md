@@ -53,10 +53,10 @@ Ensure the following tools and dependencies are installed:
    cd Banking-Transaction-System
    ```
 ### 3. Set Up the Database
-   Open MySQL Workbench and connect to your MySQL server using the root credentials.
-   Run the SQL script located in the database/ folder to set up the required database and tables:
+- Open MySQL Workbench and connect to your MySQL server using the root credentials.
+- Run the SQL script located in the database/ folder to set up the required database and tables:
     SOURCE path/to/database_script.sql;
-   Update the config.py or config.json file (if available) with the following details:
+- Update the config.py or config.json file (if available) with the following details:
     Database name
     Host (e.g., localhost)
     Port (default: 3306)
