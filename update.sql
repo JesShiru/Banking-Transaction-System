@@ -32,37 +32,37 @@ WHERE AccountType = 'Savings' AND AccountStatus = 'Active';
 --test for triggering an insert to transaction after a deposit
 DELIMITER $$
 CREATE TRIGGER after_deposit
-AFTER UPDATE ON Account
+AFTER UPDATE ON Accounts
 FOR EACH ROW
 BEGIN
     IF NEW.Balance > OLD.Balance THEN
-        INSERT INTO Transaction (AccountNumber, TransactionType, TransactionAmount, TransactionFee, DestinationAccount, Timestamp)
-        VALUES (NEW.AccountNumber, 'Deposit', NEW.Balance - OLD.Balance, 0.00, NULL, NOW());
+        INSERT INTO Transactions (AccountNumber, TransactionType, TransactionAmount, TransactionFee)
+        VALUES (NEW.AccountNumber, 'Deposit', NEW.Balance - OLD.Balance, 0.00);
     END IF;
 END$$
 DELIMITER ;
 
 -- testing the trigger
-UPDATE Account
+UPDATE Accounts
 SET balance = 30000.00 
 WHERE AccountNumber = 1255;
 
 -- withdrawal trigger
 DELIMITER $$
 CREATE TRIGGER after_withdrawal
-AFTER UPDATE ON Account
+AFTER UPDATE ON Accounts
 FOR EACH ROW
 BEGIN
     IF NEW.Balance < OLD.Balance THEN
-        INSERT INTO Transaction (AccountNumber, TransactionType, TransactionAmount, TransactionFee, DestinationAccount, Timestamp)
-        VALUES (NEW.AccountNumber, 'Withdrawal', OLD.Balance - NEW.Balance, 0.00, NULL, NOW());
+        INSERT INTO Transaction (AccountNumber, TransactionType, TransactionAmount, TransactionFee)
+        VALUES (NEW.AccountNumber, 'Withdrawal', OLD.Balance - NEW.Balance);
     END IF;
 END$$
 
 DELIMITER ;
 
 -- testing it
-UPDATE Account
+UPDATE Accounts
 SET balance = 60000.00 
 WHERE AccountNumber = 1369;
 
@@ -75,21 +75,17 @@ FOR EACH ROW
 BEGIN
     -- Log the loan payment in the Transaction table
     IF NEW.OutstandingBalance = 0 THEN
-        INSERT INTO Transaction (
+        INSERT INTO Transactions (
             AccountNumber,
             TransactionType,
             TransactionAmount,
-            TransactionFee,
-            DestinationAccount,
-            Timestamp
+            TransactionFee
         )
         VALUES (
             (SELECT AccountNumber FROM Account WHERE CustomerID = NEW.CustomerID), -- Fetch AccountNumber from Customer
             'Loan Payment',
             OLD.OutstandingBalance, -- Payment amount is the old balance
-            0.00,
-            NULL,
-            NOW()
+            0.00
         );
     END IF;
 END$$
