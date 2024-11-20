@@ -1,188 +1,217 @@
 DELIMITER $$
 
-CREATE PROCEDURE DepositMoney (
-    IN p_AccountNumber INT,
-    IN p_Amount DECIMAL(15, 2)
+CREATE PROCEDURE AddCustomer(
+    IN p_CustomerID INT,
+    IN p_FirstName VARCHAR(50),
+    IN p_LastName VARCHAR(50),
+    IN p_PhoneNumber VARCHAR(15),
+    IN p_Email VARCHAR(100),
+    IN p_NationalID VARCHAR(20),
+    IN p_AccountCreationDate DATE,
+    IN p_NextOfKin VARCHAR(100)
 )
 BEGIN
-    DECLARE current_balance DECIMAL(15, 2);
-
-    -- Fetch the current balance of the account
-    SELECT Balance INTO current_balance
-    FROM Account
-    WHERE AccountNumber = p_AccountNumber;
-
-    -- Ensure the account exists and is active
-    IF current_balance IS NULL THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Account does not exist.';
-    ELSEIF (SELECT AccountStatus FROM Account WHERE AccountNumber = p_AccountNumber) != 'Active' THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Account is not active.';
-    ELSE
-        -- Update the account balance
-        UPDATE Account
-        SET Balance = current_balance + p_Amount
-        WHERE AccountNumber = p_AccountNumber;
-
-        -- Log the transaction
-        INSERT INTO Transaction (AccountNumber, TransactionType, TransactionAmount, TransactionFee, DestinationAccount, Timestamp)
-        VALUES (p_AccountNumber, 'Deposit', p_Amount, 0.00, NULL, NOW());
-    END IF;
+    INSERT INTO Customer (CustomerID, FirstName, LastName, PhoneNumber, Email, NationalID, AccountCreationDate, NextOfKin)
+    VALUES (p_CustomerID, p_FirstName, p_LastName, p_PhoneNumber, p_Email, p_NationalID, p_AccountCreationDate, p_NextOfKin);
 END$$
 
 DELIMITER ;
+-- CALL AddCustomer(1, 'John', 'Doe', '123-456-7890', 'john.doe@example.com', 'A123456789', '2024-11-20', 'Jane Doe');
 
+
+-- updating customer info
 DELIMITER $$
 
--- withdrawal
-CREATE PROCEDURE WithdrawMoney (
-    IN p_AccountNumber INT,
-    IN p_Amount DECIMAL(15, 2),
-    IN p_TransactionFee DECIMAL(10, 2)
+CREATE PROCEDURE UpdateCustomer(
+    IN p_CustomerID INT,
+    IN p_FirstName VARCHAR(50),
+    IN p_LastName VARCHAR(50),
+    IN p_PhoneNumber VARCHAR(15),
+    IN p_Email VARCHAR(100),
+    IN p_NationalID VARCHAR(20),
+    IN p_NextOfKin VARCHAR(100)
 )
 BEGIN
-    DECLARE current_balance DECIMAL(15, 2);
-
-    -- Fetch the current balance of the account
-    SELECT Balance INTO current_balance
-    FROM Account
-    WHERE AccountNumber = p_AccountNumber;
-
-    -- Ensure the account exists, is active, and has sufficient funds
-    IF current_balance IS NULL THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Account does not exist.';
-    ELSEIF (SELECT AccountStatus FROM Account WHERE AccountNumber = p_AccountNumber) != 'Active' THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Account is not active.';
-    ELSEIF current_balance < (p_Amount + p_TransactionFee) THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Insufficient funds.';
-    ELSE
-        -- Deduct the amount and transaction fee
-        UPDATE Account
-        SET Balance = current_balance - (p_Amount + p_TransactionFee)
-        WHERE AccountNumber = p_AccountNumber;
-
-        -- Log the transaction
-        INSERT INTO Transaction (AccountNumber, TransactionType, TransactionAmount, TransactionFee, DestinationAccount, Timestamp)
-        VALUES (p_AccountNumber, 'Withdrawal', p_Amount, p_TransactionFee, NULL, NOW());
-    END IF;
+    UPDATE Customer
+    SET FirstName = p_FirstName, 
+        LastName = p_LastName, 
+        PhoneNumber = p_PhoneNumber, 
+        Email = p_Email, 
+        NationalID = p_NationalID, 
+        NextOfKin = p_NextOfKin
+    WHERE CustomerID = p_CustomerID;
 END$$
 
 DELIMITER ;
+-- CALL UpdateCustomer(1, 'Savings', 1000.00, '2024-01-01', 'Active');
 
--- transfer money
+--add new account
 DELIMITER $$
 
-CREATE PROCEDURE TransferMoney (
-    IN p_SourceAccount INT,
+CREATE PROCEDURE AddAccount(
+    IN p_AccountNumber INT,
+    IN p_CustomerID INT,
+    IN p_AccountType VARCHAR(20),
+    IN p_Balance DECIMAL(15, 2),
+    IN p_CreationDate DATE,
+    IN p_AccountStatus VARCHAR(20)
+)
+BEGIN
+    INSERT INTO Account (AccountNumber, CustomerID, AccountType, Balance, CreationDate, AccountStatus)
+    VALUES (p_AccountNumber, p_CustomerID, p_AccountType, p_Balance, p_CreationDate, p_AccountStatus);
+END$$
+
+DELIMITER ;
+-- CALL AddAccount(1001, 1, 'Savings', 1000.00, '2024-01-01', 'Active');
+
+
+-- update accountbalance
+DELIMITER $$
+
+CREATE PROCEDURE UpdateAccountBalance(
+    IN p_AccountNumber INT,
+    IN p_NewBalance DECIMAL(15, 2)
+)
+BEGIN
+    UPDATE Account
+    SET Balance = p_NewBalance
+    WHERE AccountNumber = p_AccountNumber;
+END$$
+
+DELIMITER ;
+-- CALL UpdateAccountBalance(1001, 1500.00);
+
+
+-- add transaction
+DELIMITER $$
+
+CREATE PROCEDURE AddTransaction(
+    IN p_TransactionID INT,
+    IN p_AccountNumber INT,
+    IN p_TransactionType VARCHAR(50),
+    IN p_TransactionAmount DECIMAL(15, 2),
+    IN p_TransactionFee DECIMAL(10, 2),
     IN p_DestinationAccount INT,
-    IN p_Amount DECIMAL(15, 2),
-    IN p_TransactionFee DECIMAL(10, 2)
+    IN p_Timestamp TIMESTAMP
 )
 BEGIN
-    DECLARE source_balance DECIMAL(15, 2);
-
-    -- Fetch the balance of the source account
-    SELECT Balance INTO source_balance
-    FROM Account
-    WHERE AccountNumber = p_SourceAccount;
-
-    -- Validate both accounts and ensure sufficient funds
-    IF source_balance IS NULL OR
-       (SELECT AccountStatus FROM Account WHERE AccountNumber = p_SourceAccount) != 'Active' THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Source account does not exist or is not active.';
-    ELSEIF (SELECT AccountStatus FROM Account WHERE AccountNumber = p_DestinationAccount) != 'Active' THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Destination account is not active.';
-    ELSEIF source_balance < (p_Amount + p_TransactionFee) THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Insufficient funds in source account.';
-    ELSE
-        -- Deduct from source account
-        UPDATE Account
-        SET Balance = source_balance - (p_Amount + p_TransactionFee)
-        WHERE AccountNumber = p_SourceAccount;
-
-        -- Add to destination account
-        UPDATE Account
-        SET Balance = Balance + p_Amount
-        WHERE AccountNumber = p_DestinationAccount;
-
-        -- Log the transaction
-        INSERT INTO Transaction (AccountNumber, TransactionType, TransactionAmount, TransactionFee, DestinationAccount, Timestamp)
-        VALUES (p_SourceAccount, 'Transfer', p_Amount, p_TransactionFee, p_DestinationAccount, NOW());
-    END IF;
+    INSERT INTO Transaction (TransactionID, AccountNumber, TransactionType, TransactionAmount, TransactionFee, DestinationAccount, Timestamp)
+    VALUES (p_TransactionID, p_AccountNumber, p_TransactionType, p_TransactionAmount, p_TransactionFee, p_DestinationAccount, p_Timestamp);
 END$$
 
 DELIMITER ;
+-- CALL AddTransaction(10001, 1001, 'Deposit', 500.00, 0.00, NULL, NOW());
 
--- viewing account details
+
+-- add loan
 DELIMITER $$
 
-CREATE PROCEDURE ViewAccountDetails (
+CREATE PROCEDURE AddLoan(
+    IN p_LoanID INT,
+    IN p_CustomerID INT,
+    IN p_LoanAmount DECIMAL(15, 2),
+    IN p_LoanType VARCHAR(50),
+    IN p_InterestRate DECIMAL(5, 2),
+    IN p_IssueDate DATE,
+    IN p_LoanTerm INT,
+    IN p_OutstandingBalance DECIMAL(15, 2),
+    IN p_LoanStatus VARCHAR(20)
+)
+BEGIN
+    INSERT INTO Loan (LoanID, CustomerID, LoanAmount, LoanType, InterestRate, IssueDate, LoanTerm, OutstandingBalance, LoanStatus)
+    VALUES (p_LoanID, p_CustomerID, p_LoanAmount, p_LoanType, p_InterestRate, p_IssueDate, p_LoanTerm, p_OutstandingBalance, p_LoanStatus);
+END$$
+
+DELIMITER ;
+-- CALL AddLoan(1, 1, 5000.00, 'Personal', 5.00, '2024-01-01', 12, 1000.00, 'Active');
+
+
+--update loan status
+DELIMITER $$
+
+CREATE PROCEDURE UpdateLoanStatus(
+    IN p_LoanID INT,
+    IN p_LoanStatus VARCHAR(20)
+)
+BEGIN
+    UPDATE Loan
+    SET LoanStatus = p_LoanStatus
+    WHERE LoanID = p_LoanID;
+END$$
+
+DELIMITER ;
+-- CALL UpdateLoanStatus(1, 'Paid Off');
+
+
+-- add card
+DELIMITER $$
+
+CREATE PROCEDURE AddCard(
+    IN p_CardNumber VARCHAR(16),
+    IN p_Type VARCHAR(20),
+    IN p_IssueDate DATE,
+    IN p_ExpirationDate DATE,
     IN p_AccountNumber INT
 )
 BEGIN
-    SELECT AccountNumber, CustomerID, AccountType, Balance, CreationDate, AccountStatus
-    FROM Account
-    WHERE AccountNumber = p_AccountNumber;
+    INSERT INTO Card (CardNumber, Type, IssueDate, ExpirationDate, AccountNumber)
+    VALUES (p_CardNumber, p_Type, p_IssueDate, p_ExpirationDate, p_AccountNumber);
 END$$
 
 DELIMITER ;
+-- CALL AddCard('1234567812345678', 'Credit', '2024-01-01', '2026-01-01', 1001);
 
--- managing loan payments
+
+-- update card status
 DELIMITER $$
 
-CREATE PROCEDURE PayLoan (
-    IN p_LoanID INT,
-    IN p_Amount DECIMAL(15, 2)
+CREATE PROCEDURE UpdateCardExpiration(
+    IN p_CardNumber VARCHAR(16),
+    IN p_ExpirationDate DATE
 )
 BEGIN
-    DECLARE current_balance DECIMAL(15, 2);
-
-    -- Fetch the current outstanding balance
-    SELECT OutstandingBalance INTO current_balance
-    FROM Loan
-    WHERE LoanID = p_LoanID;
-
-    -- Validate loan and payment
-    IF current_balance IS NULL THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Loan does not exist.';
-    ELSEIF current_balance < p_Amount THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Payment exceeds outstanding balance.';
-    ELSE
-        -- Deduct payment from outstanding balance
-        UPDATE Loan
-        SET OutstandingBalance = current_balance - p_Amount,
-            LoanStatus = CASE WHEN current_balance - p_Amount = 0 THEN 'Inactive' ELSE LoanStatus END
-        WHERE LoanID = p_LoanID;
-
-        -- Log payment in the Transaction table
-        INSERT INTO Transaction (AccountNumber, TransactionType, TransactionAmount, TransactionFee, DestinationAccount, Timestamp)
-        VALUES (NULL, 'Loan Payment', p_Amount, 0.00, NULL, NOW());
-    END IF;
+    UPDATE Card
+    SET ExpirationDate = p_ExpirationDate
+    WHERE CardNumber = p_CardNumber;
 END$$
 
 DELIMITER ;
+-- CALL UpdateCardExpiration()
 
--- testing procedures
--- deposit
-CALL DepositMoney(101, 500.00);
+-- add branch
+DELIMITER $$
 
--- withdrawal
-CALL WithdrawMoney(101, 200.00, 2.50);
+CREATE PROCEDURE AddBranch(
+    IN p_BranchID INT,
+    IN p_Location VARCHAR(100),
+    IN p_ContactInformation VARCHAR(100),
+    IN p_ManagerID INT
+)
+BEGIN
+    INSERT INTO Branch (BranchID, Location, ContactInformation, ManagerID)
+    VALUES (p_BranchID, p_Location, p_ContactInformation, p_ManagerID);
+END$$
 
--- tranferring
-CALL TransferMoney(101, 102, 300.00, 5.00);
+DELIMITER ;
+-- CALL AddBranch('Downtown', '123-456-7890', 1);
 
--- viewing account
-CALL ViewAccountDetails(101);
 
--- pay loan
-CALL PayLoan(201, 1000.00);
+-- add employee
+DELIMITER $$
+
+CREATE PROCEDURE AddEmployee(
+    IN p_EmployeeID INT,
+    IN p_BranchID INT,
+    IN p_FirstName VARCHAR(50),
+    IN p_LastName VARCHAR(50),
+    IN p_Role VARCHAR(50),
+    IN p_PhoneNumber VARCHAR(15),
+    IN p_Email VARCHAR(100)
+)
+BEGIN
+    INSERT INTO Employees (EmployeeID, BranchID, FirstName, LastName, Role, PhoneNumber, Email)
+    VALUES (p_EmployeeID, p_BranchID, p_FirstName, p_LastName, p_Role, p_PhoneNumber, p_Email);
+END$$
+
+DELIMITER ;
+-- CALL AddEmployee(1, 'Alice', 'Smith', 'Manager', '9876543210', 'alice.smith@email.com');
