@@ -67,39 +67,40 @@ Use MySQL Workbench to view, query, and manage the database.
 Connect using the credentials provided during installation.
 
 ## Step-by-Step Procedure to Run Scripts
+
 Follow these steps to execute the scripts in the correct order:
 
-### Step 1: Open tablescripts.sql
-- Open MySQL Workbench and connect to your MySQL Server.
-- In the Navigator, ensure you are connected to the correct MySQL instance.
-- Open the file tablescripts.sql located in the repository's sql/ folder.
-- Use the menu: File > Open SQL Script.
+### Step 1: Open `tablescripts.sql`
+- Open **MySQL Workbench** and connect to your MySQL Server.
+- In the **Navigator**, ensure you are connected to the correct MySQL instance.
+- Open the file `tablescripts.sql` located in the repository's `sql/` folder.
+  - Use the menu: **File > Open SQL Script**.
 - Execute the script to create the database and tables:
-   Copy code
-   SOURCE path/to/tablescripts.sql;
+  ```sql
+  SOURCE path/to/tablescripts.sql;
 - Verify the database and tables are created:
-   Copy code
+   ```sql
    SHOW DATABASES;
    USE your_database_name;
    SHOW TABLES;
 
 ### Step 2: Run insertstatements.sql
-- Open the insertstatements.sql script in MySQL Workbench.
-- Execute the script to insert sample data into the database:
-   Copy code
+ - Open the **insertstatements.sql** script in MySQL Workbench.
+ - Execute the script to **insert sample data** into the database:
+   ```sql
    SOURCE path/to/insertstatements.sql;
-- Verify the data was inserted successfully:
-   Copy code
+ - Verify the data was inserted successfully:
+   ```sql
    SELECT * FROM customers;
    SELECT * FROM accounts;
 
 ### Step 3: Run storedprocedures.sql
-- Open the storedprocedures.sql file in MySQL Workbench.
-- Execute the script to create stored procedures:
-   Copy code
+- Open the **storedprocedures.sql** file in MySQL Workbench.
+- Execute the script to **create stored procedures**:
+   ```sql
    SOURCE path/to/storedprocedures.sql;
 - Verify the stored procedures are created:
-   Copy code
+   ```sql
    SHOW PROCEDURE STATUS WHERE Db = 'your_database_name';
 
 ### Step 4: Test Stored Procedures
