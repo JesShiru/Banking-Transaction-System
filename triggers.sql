@@ -1,6 +1,5 @@
 -- customer updates
-
-UPDATE: Update phone numbers of customers with missing or invalid entries
+-- UPDATE: Update phone numbers of customers with missing or invalid entries
 UPDATE Customer
 SET PhoneNumber = 'Unknown'
 WHERE PhoneNumber IS NULL OR LENGTH(PhoneNumber) < 10;
