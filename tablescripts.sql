@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS Customer (
 );
 
 -- Account Table
-CREATE TABLE IF NOT EXISTS Account (
+CREATE TABLE IF NOT EXISTS Accounts (
     AccountNumber INT PRIMARY KEY,        
     CustomerID INT,                       
     AccountType VARCHAR(20),
@@ -29,14 +29,13 @@ CREATE TABLE IF NOT EXISTS Account (
 
 
 -- Transaction Table
-CREATE TABLE IF NOT EXISTS Transaction (
+CREATE TABLE IF NOT EXISTS Transactions (
     TransactionID INT PRIMARY KEY,         
     AccountNumber INT,                     
     TransactionType VARCHAR(50),
     TransactionAmount DECIMAL(15, 2),
     TransactionFee DECIMAL(10, 2),
-    DestinationAccount INT,
-    Timestamp TIMESTAMP,
+    Timestamp TIMESTAMP default CURRENT_TIMESTAMP,
     FOREIGN KEY (AccountNumber) REFERENCES Account(AccountNumber)
 );
 
@@ -57,7 +56,7 @@ CREATE TABLE IF NOT EXISTS Loan (
 -- Card Table
 CREATE TABLE IF NOT EXISTS Card (
     CardNumber VARCHAR(16) PRIMARY KEY,            
-    Type VARCHAR(20),                      
+    CardType VARCHAR(20),                      
     IssueDate DATE,
     ExpirationDate DATE,
     AccountNumber INT,                    
