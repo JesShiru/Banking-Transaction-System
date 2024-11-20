@@ -1,6 +1,6 @@
-SELECT * FROM banking_transaction.transaction;
-SELECT * FROM banking_transaction.account;
-SELECT * FROM banking_transaction.employees;
-SELECT * FROM banking_transaction.loan;
-SELECT * FROM banking_transaction.branch;
-
+SELECT * FROM accounts;
+SELECT * FROM employees;
+SELECT * FROM loan;
+SELECT * FROM branch;
+SELECT * FROM card;
+SELECT * FROM customer;
