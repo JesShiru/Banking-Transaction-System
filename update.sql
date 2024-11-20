@@ -15,18 +15,6 @@ UPDATE Customer
 SET NextOfKin = 'Not Provided'
 WHERE NextOfKin IS NULL;
 
--- Accounts
-
--- UPDATE: Convert all "Fixed Deposit" accounts to "Standard"
-UPDATE Accounts
-SET AccountType = 'Standard'
-WHERE AccountType = 'Fixed Deposit';
-
--- UPDATE: Add a 1% interest to all active savings accounts
-UPDATE Accounts
-SET Balance = Balance + (Balance * 0.01)
-WHERE AccountType = 'Savings' AND AccountStatus = 'Active';
-
 -- trigger to prevent negative balance
 DELIMITER //
 CREATE TRIGGER PreventNegativeBalance
