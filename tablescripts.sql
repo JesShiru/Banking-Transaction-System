@@ -1,5 +1,7 @@
+#Creating the database
 DROP DATABASE IF EXISTS banking_system;
 CREATE DATABASE IF NOT EXISTS banking_system;
+USE banking_system;
 
 # Creating the relevant tables
 -- Customer Table
