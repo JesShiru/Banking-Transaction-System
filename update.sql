@@ -34,9 +34,8 @@ WHERE AccountType = 'Savings' AND AccountStatus = 'Active';
 
 
 
---test for triggering an insert to transaction after a deposit(works but confirm)
+--test for triggering an insert to transaction after a deposit
 DELIMITER $$
-
 CREATE TRIGGER after_deposit
 AFTER UPDATE ON Account
 FOR EACH ROW
@@ -46,8 +45,8 @@ BEGIN
         VALUES (NEW.AccountNumber, 'Deposit', NEW.Balance - OLD.Balance, 0.00, NULL, NOW());
     END IF;
 END$$
-
 DELIMITER ;
+
 -- testing the trigger
 UPDATE Account
 SET balance = 30000.00 
@@ -55,7 +54,6 @@ WHERE AccountNumber = 1255;
 
 -- withdrawal trigger
 DELIMITER $$
-
 CREATE TRIGGER after_withdrawal
 AFTER UPDATE ON Account
 FOR EACH ROW
