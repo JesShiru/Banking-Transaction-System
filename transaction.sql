@@ -4,7 +4,7 @@ LIMIT 0, 100
 
 -- Date: 2024-11-19 00:07
 */
-INSERT INTO transactions (,`AccountNumber`,`TransactionType`,`TransactionAmount`,`TransactionFee`) VALUES (1255,'Deposit',1500.00,15.00);
+INSERT INTO transactions (`AccountNumber`,`TransactionType`,`TransactionAmount`,`TransactionFee`) VALUES (1255,'Deposit',1500.00,15.00);
 INSERT INTO transactions (`AccountNumber`,`TransactionType`,`TransactionAmount`,`TransactionFee`) VALUES (1369,'Withdrawal',2000.00,10.00);
 INSERT INTO transactions (`AccountNumber`,`TransactionType`,`TransactionAmount`,`TransactionFee`) VALUES (1379,'Transfer',5000.00,20.00);
 INSERT INTO transactions (`AccountNumber`,`TransactionType`,`TransactionAmount`,`TransactionFee`) VALUES (1416,'Deposit',10000.00,50.00);
