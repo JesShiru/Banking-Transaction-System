@@ -84,8 +84,8 @@ Follow these steps to execute the scripts in the correct order:
    USE your_database_name;
    SHOW TABLES;
 
-### Step 2: Run insertstatements.sql
- - Open the **insertstatements.sql** script in MySQL Workbench.
+### Step 2: Run `insert_statements.sql`
+ - Open the **insert_statements.sql** script in MySQL Workbench.
  - Execute the script to **insert sample data** into the database:
    ```sql
    SOURCE path/to/insertstatements.sql;
@@ -94,7 +94,9 @@ Follow these steps to execute the scripts in the correct order:
    SELECT * FROM customers;
    SELECT * FROM accounts;
 
-### Step 3: Run storedprocedures.sql
+### Step 3: Run `storedprocedures.sql` 
+- Defines the stored procedures used for various database operations like adding, updating, or managing customers, accounts, loans, transactions, branches, and employees.
+
 - Open the **storedprocedures.sql** file in MySQL Workbench.
 - Execute the script to **create stored procedures**:
    ```sql
@@ -103,11 +105,26 @@ Follow these steps to execute the scripts in the correct order:
    ```sql
    SHOW PROCEDURE STATUS WHERE Db = 'your_database_name';
 
-### Step 4: Test Stored Procedures
+### Step 4: Run `triggers.sql`
+- This script creates triggers to enforce business rules and maintain database integrity.
+- Open the **triggers.sql** file in MySQL Workbench.
+- Execute the script to **create triggers**:
+    ```sql
+   SOURCE path/to/triggers.sql;
 
-### Step 5: Run Additional Scripts (Optional)
-If there are other scripts (e.g., for views, triggers, or reports), follow the same process:
+### Step 5: Run `events.sql`
+- Defines scheduled events for periodic actions, such as applying interest to savings accounts and updating outstanding loan balances.
+- **To be run after triggers and stored procedures**: Events depend on stored procedures or the integrity rules set by triggers.
+- Open the **events.sql** file in MySQL Workbench.
+- Execute the script to **define events**:
+    ```sql
+   SOURCE path/to/events.sql;
 
+### Step 6: Run Additional Scripts (`transaction.sql`, `read.sql`)
+-`transaction.sql` populates the database with sample transaction data to test triggers, procedures, and events in a realistic context.
+- `read.sql` contains SELECT statements to retrieve and verify data from the database for **testing** or **reporting**.
+
+- To run the two scripts, follow the same process:
 - Open the script in MySQL Workbench.
 - Execute it using the Run Script button or the SOURCE command.
 
