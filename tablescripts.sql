@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS Accounts (
 
 -- Transaction Table
 CREATE TABLE IF NOT EXISTS Transactions (
-    TransactionID INT PRIMARY KEY,         
+    TransactionID INT AUTO_INCREMENT PRIMARY KEY,         
     AccountNumber INT,                     
     TransactionType VARCHAR(50),
     TransactionAmount DECIMAL(15, 2),
