@@ -55,12 +55,14 @@ Ensure the following tools and dependencies are installed:
 ### 3. Set Up the Database
 - **Open MySQL Workbench** and connect to your MySQL server using the root credentials.
 - **Run the SQL script** located in the database/ folder to set up the required database and tables:
-    SOURCE path/to/database_script.sql;
+    ```sql
+  SOURCE path/to/database_script.sql;
 - **Update the config.py or config.json file** (if available) with the following details:
-  Database name
-  Host (e.g., localhost)
-  Port (default: 3306)
-  Username and password for the database connection
+
+   Database name
+   Host (e.g., localhost)
+   Port (default: 3306)
+   Username and password for the database connection
   
 ### Accessing MySQL Workbench
 Use MySQL Workbench to view, query, and manage the database. 
@@ -121,10 +123,10 @@ Follow these steps to execute the scripts in the correct order:
    SOURCE path/to/events.sql;
 
 ### Step 6: Run Additional Scripts (`transaction.sql`, `read.sql`)
--`transaction.sql` populates the database with sample transaction data to test triggers, procedures, and events in a realistic context.
+- `transaction.sql` populates the database with sample transaction data to test triggers, procedures, and events in a realistic context.
 - `read.sql` contains SELECT statements to retrieve and verify data from the database for **testing** or **reporting**.
 
-- To run the two scripts, follow the same process:
+To run the two scripts, follow the same process:
 - Open the script in MySQL Workbench.
 - Execute it using the Run Script button or the SOURCE command.
 
