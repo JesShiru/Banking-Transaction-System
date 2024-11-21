@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS Transactions (
     TransactionAmount DECIMAL(15, 2),
     TransactionFee DECIMAL(10, 2),
     Timestamp TIMESTAMP default CURRENT_TIMESTAMP,
-    FOREIGN KEY (AccountNumber) REFERENCES Account(AccountNumber)
+    FOREIGN KEY (AccountNumber) REFERENCES Accounts(AccountNumber)
 );
 
 -- Loan Table
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS Card (
     IssueDate DATE,
     ExpirationDate DATE,
     AccountNumber INT,                    
-    FOREIGN KEY (AccountNumber) REFERENCES Account(AccountNumber)
+    FOREIGN KEY (AccountNumber) REFERENCES Accounts(AccountNumber)
 );
 
 -- Branch Table
