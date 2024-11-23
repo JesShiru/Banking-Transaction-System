@@ -122,11 +122,12 @@ Follow these steps to execute the scripts in the correct order:
     ```sql
    SOURCE path/to/events.sql;
 
-### Step 6: Run Additional Scripts (`transaction.sql`, `read.sql`)
-- `transaction.sql` populates the database with sample transaction data to test triggers, procedures, and events in a realistic context.
+### Step 6: Run Additional Scripts (`read.sql`, `views.sql`,`transaction.sql`)
 - `read.sql` contains SELECT statements to retrieve and verify data from the database for **testing** or **reporting**.
-
-To run the two scripts, follow the same process:
+- `views.sql` contains scripts that create views to show customer transactions.
+- `transaction.sql` populates the database with sample transaction data to test triggers, procedures, and events in a realistic context.
+  
+To run the three scripts, follow the same process:
 - Open the script in MySQL Workbench.
 - Execute it using the Run Script button or the SOURCE command.
 
