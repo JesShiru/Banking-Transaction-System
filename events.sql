@@ -13,3 +13,8 @@ DO
     UPDATE Loan
     SET OutstandingBalance = OutstandingBalance + (OutstandingBalance * (InterestRate / 100) / 12)
     WHERE LoanStatus = 'Active';
+    
+    
+-- to delete accounts that are inactive
+DELETE FROM accounts
+WHERE AccountStatus = 'Inactive';
