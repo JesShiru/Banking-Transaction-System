@@ -124,7 +124,7 @@ Follow these steps to execute the scripts in the correct order:
 
 ### Step 6: Run Additional Scripts (`read.sql`, `views.sql`,`transaction.sql`)
 - `read.sql` contains SELECT statements to retrieve and verify data from the database for **testing** or **reporting**.
-- `views.sql` contains scripts that create views to show customer transactions.
+- `views.sql` contains scripts that create views to show customer transaction details.
 - `transaction.sql` populates the database with sample transaction data to test triggers, procedures, and events in a realistic context.
   
 To run the three scripts, follow the same process:
